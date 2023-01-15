@@ -239,6 +239,7 @@ def get_guided_route(X, gt, filename, parameters_this_file, parameter_iteration)
 
 
 def runEE(filename, X, gt, params, parameter_iteration):
+    labelFile = filename + "_" + str(params[0][1]) + "_" + str(params[1][1]) + "_" + str(params[2][1]) + "_" + str(params[3][1])
     global withGT
     sp = params[0][1]
     ac = params[1][1]
@@ -257,7 +258,12 @@ def runEE(filename, X, gt, params, parameter_iteration):
         labels.append(l)
         if withGT:
             f1.append(metrics.f1_score(gt, l))
-        
+    
+    if os.path.exists("Labels/EE_Sk/Labels_Sk_EE_"+labelFile+".csv") == 0:
+        fileLabels=open("Labels/EE_Sk/Labels_Sk_EE_"+labelFile+".csv", 'a')
+        for l in labels:
+            fileLabels.write(','.join(str(s) for s in l) + '\n')
+        fileLabels.close()    
     for i in range(len(labels)):
         for j in range(i+1, len(labels)):
           ari.append(adjusted_rand_score(labels[i], labels[j]))      
