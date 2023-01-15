@@ -268,7 +268,6 @@ if __name__ == '__main__':
         master_files = [item for item in master_files if item not in done_files]
 
     master_files.sort()
-    print(master_files)
     parameters = []
 
     Method = ["olivehawkins", "fmcd", "ogk"];

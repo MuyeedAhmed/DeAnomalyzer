@@ -303,7 +303,7 @@ if __name__ == '__main__':
         frr=open("Results/SkEE_Uni.csv", "w")
         frr.write('Filename,store_precision,assume_centered,support_fraction,contamination\n')
         frr.close()
-    if os.path.exists("Results/SkEE_Bi.csv"):
+    if os.path.exists("Results/SkEE_Bi.csv") == 0:
         frr=open("Results/SkEE_Bi.csv", "w")
         frr.write('Filename,store_precision,assume_centered,support_fraction,contamination\n')
         frr.close()

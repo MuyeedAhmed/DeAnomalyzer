@@ -266,7 +266,7 @@ if __name__ == '__main__':
         frr=open("Results/SkIF_Uni.csv", "w")
         frr.write('Filename,n_estimators,max_samples,contamination,max_features,bootstrap,n_jobs,warm_start\n')
         frr.close()
-    if os.path.exists("Results/SkIF_Bi.csv"):
+    if os.path.exists("Results/SkIF_Bi.csv") == 0:
         frr=open("Results/SkIF_Bi.csv", "w")
         frr.write('Filename,n_estimators,max_samples,contamination,max_features,bootstrap,n_jobs,warm_start\n')
         frr.close()
