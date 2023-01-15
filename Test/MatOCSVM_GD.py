@@ -256,8 +256,7 @@ def runOCSVM(filename, X, gt, params, parameter_iteration):
             frr.write('Filename,ContaminationFraction,KernelScale,Lambda,NumExpansionDimensions,StandardizeData,BetaTolerance,BetaTolerance,GradientTolerance,IterationLimit\n')
             frr.close()
             if os.path.exists("Labels/OCSVM_Matlab/Labels_Mat_OCSVM_"+labelFile+".csv") == 0:      
-                print("\nFaild to run Matlab Engine from Python.\n")
-                exit(0)
+                return -1, -1
         except:
             print("\nFaild to run Matlab Engine from Python.\n")
             exit(0)    
