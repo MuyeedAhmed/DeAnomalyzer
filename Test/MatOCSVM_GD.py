@@ -21,9 +21,6 @@ datasetFolderDir = 'Dataset/'
 
 withGT = True
 
-fname = str(sys.argv[1])
-
-
 
 def ocsvm(filename, parameters, parameter_iteration):
     folderpath = datasetFolderDir

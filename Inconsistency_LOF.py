@@ -23,8 +23,7 @@ datasetFolderDir = 'Dataset/'
 
 withGT = True
 
-# fname = str(sys.argv[1])
-fname='ar1'
+fname = str(sys.argv[1])
 
 
 def lof(filename):

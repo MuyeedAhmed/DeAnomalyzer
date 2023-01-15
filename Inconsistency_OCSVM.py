@@ -25,12 +25,6 @@ withGT = True
 
 fname = str(sys.argv[1])
 
-'''
-Install Matlab Engine
-
-python -m pip install matlabengine
-
-'''
 
 def ocsvm(filename, parameters_r, parameters_mat, parameters_sk):
     folderpath = datasetFolderDir
