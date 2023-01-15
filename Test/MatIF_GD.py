@@ -98,7 +98,7 @@ def isolationforest(filename, parameters, parameter_iteration):
         print("Bivariate Search: ")
         print("\tCross-run ARI: ", InformedARI)
         print("\tF1 Score: ", InformedF1)
-        frr=open("Results/MatEE_Bi.csv", "a")
+        frr=open("Results/MatIF_Bi.csv", "a")
         frr.write(filename)
         for i in range(len(guided_route)):
             frr.write("," + str(guided_route[i][3][guided_route[i][1]][0]))
