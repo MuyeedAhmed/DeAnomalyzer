@@ -262,7 +262,13 @@ if __name__ == '__main__':
     for i in range(len(master_files)):
         master_files[i] = master_files[i].split("/")[-1].split(".")[0]
     
+    if os.path.exists("Results/MatEE_Uni.csv"):
+        MatEE_Uni = pd.read_csv("Results/MatEE_Uni.csv")
+        done_files = MatEE_Uni["Filename"].to_numpy()
+        master_files = [item for item in master_files if item not in done_files]
+
     master_files.sort()
+    print(master_files)
     parameters = []
 
     Method = ["olivehawkins", "fmcd", "ogk"];
@@ -290,14 +296,14 @@ if __name__ == '__main__':
     frr=open("GD_ReRun/MatEE.csv", "w")
     frr.write('Filename,Method,OutlierFraction,NumTrials,BiasCorrection,NumOGKIterations,UnivariateEstimator,ReweightingMethod,NumConcentrationSteps,StartMethod\n')
     frr.close()
-    
-    frr=open("Results/MatEE_Uni.csv", "w")
-    frr.write('Filename,Method,OutlierFraction,NumTrials,BiasCorrection,NumOGKIterations,UnivariateEstimator,ReweightingMethod,NumConcentrationSteps,StartMethod\n')
-    frr.close()
-    
-    frr=open("Results/MatEE_Bi.csv", "w")
-    frr.write('Filename,Method,OutlierFraction,NumTrials,BiasCorrection,NumOGKIterations,UnivariateEstimator,ReweightingMethod,NumConcentrationSteps,StartMethod\n')
-    frr.close()
+    if os.path.exists("Results/MatEE_Uni.csv") == 0:
+        frr=open("Results/MatEE_Uni.csv", "w")
+        frr.write('Filename,Method,OutlierFraction,NumTrials,BiasCorrection,NumOGKIterations,UnivariateEstimator,ReweightingMethod,NumConcentrationSteps,StartMethod\n')
+        frr.close()
+    if os.path.exists("Results/MatEE_Bi.csv") == 0:
+        frr=open("Results/MatEE_Bi.csv", "w")
+        frr.write('Filename,Method,OutlierFraction,NumTrials,BiasCorrection,NumOGKIterations,UnivariateEstimator,ReweightingMethod,NumConcentrationSteps,StartMethod\n')
+        frr.close()
     
     for fname in master_files:
         ee(fname, parameters, 0)

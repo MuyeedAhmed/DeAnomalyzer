@@ -256,6 +256,11 @@ if __name__ == '__main__':
     for i in range(len(master_files)):
         master_files[i] = master_files[i].split("/")[-1].split(".")[0]
     
+    if os.path.exists("Results/RIF_Uni.csv"):
+        RIF_Uni = pd.read_csv("Results/RIF_Uni.csv")
+        done_files = RIF_Uni["Filename"].to_numpy()
+        master_files = [item for item in master_files if item not in done_files]
+    
     master_files.sort()
     parameters = []
     ntrees = [2, 4, 8, 16, 32, 64, 100, 128, 256, 512]
@@ -271,14 +276,15 @@ if __name__ == '__main__':
     frr=open("GD_ReRun/RIF.csv", "w")
     frr.write('Filename,ntrees,standardize_data,sample_size,ncols_per_tree\n')
     frr.close()
-        
-    frr=open("Results/RIF_Uni.csv", "w")
-    frr.write('Filename,ntrees,standardize_data,sample_size,ncols_per_tree\n')
-    frr.close()
     
-    frr=open("Results/RIF_Bi.csv", "w")
-    frr.write('Filename,ntrees,standardize_data,sample_size,ncols_per_tree\n')
-    frr.close()
+    if os.path.exists("Results/RIF_Uni.csv") == 0:
+        frr=open("Results/RIF_Uni.csv", "w")
+        frr.write('Filename,ntrees,standardize_data,sample_size,ncols_per_tree\n')
+        frr.close()
+    if os.path.exists("Results/RIF_Bi.csv") == 0:
+        frr=open("Results/RIF_Bi.csv", "w")
+        frr.write('Filename,ntrees,standardize_data,sample_size,ncols_per_tree\n')
+        frr.close()
     
     for fname in master_files:
         isolationforest(fname, parameters, 0)

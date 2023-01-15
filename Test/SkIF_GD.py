@@ -239,6 +239,10 @@ if __name__ == '__main__':
     for i in range(len(master_files)):
         master_files[i] = master_files[i].split("/")[-1].split(".")[0]
     
+    if os.path.exists("Results/SkIF_Uni.csv"):
+        SkIF_Uni = pd.read_csv("Results/SkIF_Uni.csv")
+        done_files = SkIF_Uni["Filename"].to_numpy()
+        master_files = [item for item in master_files if item not in done_files]
     master_files.sort()
     parameters = []
     
@@ -258,13 +262,14 @@ if __name__ == '__main__':
     parameters.append(["n_jobs", None, n_jobs])
     parameters.append(["warm_start", False, warm_start])
     
-    frr=open("Results/SkIF_Uni.csv", "w")
-    frr.write('Filename,n_estimators,max_samples,contamination,max_features,bootstrap,n_jobs,warm_start\n')
-    frr.close()
-    
-    frr=open("Results/SkIF_Bi.csv", "w")
-    frr.write('Filename,n_estimators,max_samples,contamination,max_features,bootstrap,n_jobs,warm_start\n')
-    frr.close()
+    if os.path.exists("Results/SkIF_Uni.csv") == 0:
+        frr=open("Results/SkIF_Uni.csv", "w")
+        frr.write('Filename,n_estimators,max_samples,contamination,max_features,bootstrap,n_jobs,warm_start\n')
+        frr.close()
+    if os.path.exists("Results/SkIF_Bi.csv"):
+        frr=open("Results/SkIF_Bi.csv", "w")
+        frr.write('Filename,n_estimators,max_samples,contamination,max_features,bootstrap,n_jobs,warm_start\n')
+        frr.close()
     
     for fname in master_files:
         isolationforest(fname, parameters, 0)

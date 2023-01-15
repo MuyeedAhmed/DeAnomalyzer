@@ -283,7 +283,10 @@ if __name__ == '__main__':
     master_files = master_files1 + master_files2
     for i in range(len(master_files)):
         master_files[i] = master_files[i].split("/")[-1].split(".")[0]
-    
+    if os.path.exists("Results/SkEE_Uni.csv"):
+        SkEE_Uni = pd.read_csv("Results/SkEE_Uni.csv")
+        done_files = SkEE_Uni["Filename"].to_numpy()
+        master_files = [item for item in master_files if item not in done_files]
     master_files.sort()
         
     parameters = []
@@ -296,14 +299,14 @@ if __name__ == '__main__':
     parameters.append(["assume_centered", False, assume_centered])
     parameters.append(["support_fraction", None, support_fraction])
     parameters.append(["contamination", 0.1, contamination])
-    
-    frr=open("Results/SkEE_Uni.csv", "w")
-    frr.write('Filename,store_precision,assume_centered,support_fraction,contamination\n')
-    frr.close()
-    
-    frr=open("Results/SkEE_Bi.csv", "w")
-    frr.write('Filename,store_precision,assume_centered,support_fraction,contamination\n')
-    frr.close()
+    if os.path.exists("Results/SkEE_Uni.csv") == 0:
+        frr=open("Results/SkEE_Uni.csv", "w")
+        frr.write('Filename,store_precision,assume_centered,support_fraction,contamination\n')
+        frr.close()
+    if os.path.exists("Results/SkEE_Bi.csv"):
+        frr=open("Results/SkEE_Bi.csv", "w")
+        frr.write('Filename,store_precision,assume_centered,support_fraction,contamination\n')
+        frr.close()
     
     for fname in master_files:
         ee(fname, parameters, 0)
