@@ -99,7 +99,6 @@ def get_blind_route(X, gt, filename, parameters_this_file, parameter_iteration):
     blind_route = []
     
     for p_i in range(len(parameters_this_file)):
-        print(p_i)
         p = p_i
         
         parameter_route = []
