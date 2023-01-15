@@ -20,6 +20,7 @@ datasetFolderDir = 'Dataset/'
 withGT = True
 
 def ee(filename, parameters, parameter_iteration):
+    print(filename)
     folderpath = datasetFolderDir
     parameters_this_file = deepcopy(parameters)
     global withGT
@@ -61,21 +62,20 @@ def ee(filename, parameters, parameter_iteration):
     
     blind_route = get_blind_route(X, gt, filename, deepcopy(mod_parameters), parameter_iteration)
     
-    # DefaultARI = str(blind_route[0][3][0][1])
-    # DefaultF1 = str(blind_route[0][3][0][2])
-    # print("Default settings: ")
-    # print("\tCross-run ARI: ", DefaultARI)
-    # if withGT:
-    #     print("\tF1 Score: ", DefaultF1)
+    DefaultARI = str(blind_route[0][3][0][1])
+    DefaultF1 = str(blind_route[0][3][0][2])
+    print("Default settings: ")
+    print("\tCross-run ARI: ", DefaultARI)
+    if withGT:
+        print("\tF1 Score: ", DefaultF1)
     
-    # UninformedARI = str(blind_route[-1][3][-1][1])
-    # UninformedF1 = str(blind_route[-1][3][-1][2])
-    # print("Univariate Search: ")
-    # print("\tCross-run ARI: ", UninformedARI)
-    # if withGT:
-    #     print("\tF1 Score: ", UninformedF1)
-    # print("\tOutput Parameters:")
-    # print("\n\t", end='')
+    UninformedARI = str(blind_route[-1][3][-1][1])
+    UninformedF1 = str(blind_route[-1][3][-1][2])
+    print("Univariate Search: ")
+    print("\tCross-run ARI: ", UninformedARI)
+    if withGT:
+        print("\tF1 Score: ", UninformedF1)
+
     
     frr=open("Results/SkEE_Uni.csv", "a")
     frr.write(filename)
@@ -87,13 +87,12 @@ def ee(filename, parameters, parameter_iteration):
     if withGT:
         guided_route = get_guided_route(X, gt, filename, deepcopy(mod_parameters), parameter_iteration)
     
-        # InformedARI = str(guided_route[-1][3][-1][1])
-        # InformedF1 = str(guided_route[-1][3][-1][2])
-        # print("Bivariate Search: ")
-        # print("\tCross-run ARI: ", InformedARI)
-        # print("\tF1 Score: ", InformedF1)
-        # print("\tOutput Parameters:")
-        # print("\n\t", end='')
+        InformedARI = str(guided_route[-1][3][-1][1])
+        InformedF1 = str(guided_route[-1][3][-1][2])
+        print("Bivariate Search: ")
+        print("\tCross-run ARI: ", InformedARI)
+        print("\tF1 Score: ", InformedF1)
+
         frr=open("Results/SkEE_Bi.csv", "a")
         frr.write(filename)
         for i in range(len(guided_route)):
@@ -130,7 +129,6 @@ def get_blind_route(X, gt, filename, parameters_this_file, parameter_iteration):
     blind_route = []
     
     for p_i in range(len(parameters_this_file)):
-        print(p_i)
         p = p_i
         
         parameter_route = []
