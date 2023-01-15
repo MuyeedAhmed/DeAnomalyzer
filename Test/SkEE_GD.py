@@ -56,8 +56,10 @@ def ee(filename, parameters, parameter_iteration):
     # ## Rearrange "IF" and "LOF"
     if_cont, lof_cont = IF_LOF_ContFactor(X)
     mod_parameters = deepcopy(parameters)    
-    bisect.insort(mod_parameters[3][2], lof_cont)
-    bisect.insort(mod_parameters[3][2], if_cont)
+    if lof_cont != 0:
+        bisect.insort(mod_parameters[3][2], lof_cont)
+    if if_cont != 0:
+        bisect.insort(mod_parameters[3][2], if_cont)
     # ##
     
     blind_route = get_blind_route(X, gt, filename, deepcopy(mod_parameters), parameter_iteration)
