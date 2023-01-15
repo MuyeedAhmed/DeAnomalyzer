@@ -43,4 +43,12 @@ lympho,fmcd,0.5,500,1,2,tauscale,rfch,10,classical
 mw1,fmcd,0.5,500,1,2,tauscale,rfch,10,classical
 optdigits,fmcd,0.5,500,1,2,tauscale,rfch,10,classical
 pc1,fmcd,0.5,500,1,2,tauscale,rfch,10,classical
-pima,ogk,0.5,500,1,2,tauscale,rfch,10,classical
+pima,ogk,0.5,500,1,2,tauscale,rfch,10,classicalsatellite,olivehawkins,0.5,500,1,2,tauscale,rfch,10,classical
+satimage-2,olivehawkins,0.5,500,1,2,tauscale,rfch,10,classical
+thoracic_surgery,fmcd,0.5,500,1,2,tauscale,rfch,10,classical
+thyroid,fmcd,0.5,500,1,2,tauscale,rfch,10,classical
+vertebral,fmcd,0.5,500,1,2,tauscale,rfch,10,classical
+visualizing_livestock,fmcd,0.5,500,1,2,tauscale,rfch,10,classical
+vowels,ogk,0.5,500,1,2,tauscale,rfch,10,classical
+wbc,ogk,0.5,500,1,2,tauscale,rfch,10,classical
+wine,fmcd,0.3,500,1,2,tauscale,rfch,10,classical
