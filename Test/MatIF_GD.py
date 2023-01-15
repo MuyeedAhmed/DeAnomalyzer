@@ -58,8 +58,10 @@ def isolationforest(filename, parameters, parameter_iteration):
     # ## Rearrange "IF" and "LOF" on index 0 and "auto" in index 2
     if_cont, lof_cont = IF_LOF_ContFactor(X)
     mod_parameters = deepcopy(parameters)
-    bisect.insort(mod_parameters[0][2], lof_cont)
-    bisect.insort(mod_parameters[0][2], if_cont)
+    if lof_cont != 0:
+        bisect.insort(mod_parameters[0][2], lof_cont)
+    if if_cont != 0:
+        bisect.insort(mod_parameters[0][2], if_cont)
     
     auto_1 = min(256, X.shape[0])/X.shape[0]
     bisect.insort(mod_parameters[2][2], auto_1)
