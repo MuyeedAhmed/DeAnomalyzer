@@ -520,5 +520,5 @@ if __name__ == '__main__':
     if ".csv" in fname:
         fname = fname.split(".csv")[0]
     ocsvm(fname, parameters_r, parameters_mat, parameters_sk)
-    
+    eng.quit()
     

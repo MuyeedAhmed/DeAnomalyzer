@@ -539,4 +539,4 @@ if __name__ == '__main__':
         
     ee(fname, parameters_mat, parameters_sk)
     
-    
+    eng.quit()

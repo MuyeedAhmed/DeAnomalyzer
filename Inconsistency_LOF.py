@@ -7,12 +7,8 @@ import mat73
 from scipy.io import loadmat
 import numpy as np
 from sklearn import metrics
-from copy import deepcopy
 from sklearn.metrics.cluster import adjusted_rand_score
-from sklearn.svm import OneClassSVM
-from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
-import bisect 
 
 import subprocess
 import matlab.engine
@@ -175,5 +171,5 @@ if __name__ == '__main__':
     if ".csv" in fname:
         fname = fname.split(".csv")[0]
     lof(fname)
-    
+    eng.quit()
     

@@ -12,7 +12,6 @@ from sklearn.metrics.cluster import adjusted_rand_score
 import bisect
 from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor
-import subprocess
 import matlab.engine
 eng = matlab.engine.start_matlab()
 
@@ -311,3 +310,4 @@ if __name__ == '__main__':
         fname = fname.split(".csv")[0]
     ocsvm(fname, parameters, 0)
          
+    eng.quit()

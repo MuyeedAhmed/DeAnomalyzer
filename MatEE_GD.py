@@ -284,7 +284,7 @@ if __name__ == '__main__':
     if ".csv" in fname:
         fname = fname.split(".csv")[0]
     ee(fname, parameters, 0)
-        
+    eng.quit()
         
         
         
