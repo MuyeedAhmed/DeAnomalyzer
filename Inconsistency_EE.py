@@ -154,13 +154,6 @@ def IF_LOF_ContFactor(X):
     
     return if_per, lof_per
 
-    dx = p2x - p1x
-    dy = p2y - p1y
-    theta = math.atan2(dy, dx)
-    angle = math.degrees(theta)  # angle is in (-180, 180]
-    if angle < 0:
-        angle = 360 + angle
-    return angle
 
 def get_blind_route(X, gt, filename, paramaters_sk_copy,paramaters_mat_copy_pre):
     blind_route_sk = []

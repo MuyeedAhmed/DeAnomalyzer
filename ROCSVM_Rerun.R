@@ -17,10 +17,7 @@ ocsvm_ = function(filename, kernel, degree, gamma, coef0, tolerance, nu, shrinki
   print(filename)
   folderpath = datasetFolderDir
   if (file.exists(paste(folderpath,filename,".mat",sep = ""))){
-    if (file.info(paste(folderpath,filename,".mat",sep = ""))$size > 200000){
-      print("Too Large")
-      return()
-    }
+
     df = read.mat(paste(folderpath,filename,".mat",sep = "")[1])
     gt = df$y
     X = df$X
@@ -30,10 +27,6 @@ ocsvm_ = function(filename, kernel, degree, gamma, coef0, tolerance, nu, shrinki
     }
   }
   else if (file.exists(paste(folderpath,filename,".csv",sep = ""))){
-    if (file.info(paste(folderpath,filename,".csv",sep = ""))$size > 200000){
-      print("Too Large")
-      return()
-    }
     df = read.csv(paste(folderpath,filename,".csv",sep = "")[1])
     gt = df$target
     X = subset(df, select=-c(target))
