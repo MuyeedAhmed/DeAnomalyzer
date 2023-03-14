@@ -19,7 +19,8 @@ from copy import copy, deepcopy
 from sklearn.metrics.cluster import adjusted_rand_score
 import bisect 
 from Paramaters import getParameter
-
+import matlab.engine
+            
 datasetFolderDir = 'Dataset/'
 fname = str(sys.argv[1])
 
@@ -36,6 +37,13 @@ class DeAnomalyzer:
         self.readData()
         self.injectParameter()
         
+        if self.tool == "Matlab":
+            self.eng = matlab.engine.start_matlab()
+    
+    def destroy(self):
+        if self.tool == "Matlab":
+            self.eng.quit()
+            
     def injectParameter(self):
         if self.algoName == "IF" and self.tool == "Sklearn":
             auto_1 = min(256, self.X.shape[0])/self.X.shape[0]
@@ -232,9 +240,7 @@ class DeAnomalyzer:
 
     def runAlgo(self, params):
         
-        import matlab.engine
-        eng = matlab.engine.start_matlab()
-        print("fix eng")
+        
         labelFile = self.fileName + "_" + str(params[0][1]) + "_" + str(params[1][1]) + "_" + str(params[2][1]) + "_" + str(params[3][1]) + "_" + str(params[4][1]) + "_" + str(params[5][1]) + "_" + str(params[6][1]) + "_" + str(params[7][1])
         
         if os.path.exists("Labels/OCSVM_Matlab/Labels_Mat_OCSVM_"+labelFile+".csv") == 0:
@@ -242,7 +248,7 @@ class DeAnomalyzer:
             frr.write(self.fileName+","+str(params[0][1])+","+str(params[1][1])+","+str(params[2][1])+","+str(params[3][1])+","+str(params[4][1])+","+str(params[5][1])+","+str(params[6][1])+","+str(params[7][1])+'\n')
             frr.close()
             try:
-                eng.MatOCSVM_Rerun(nargout=0)
+                self.eng.MatOCSVM_Rerun(nargout=0)
                 frr=open("GD_ReRun/MatOCSVM.csv", "w")
                 frr.write('Filename,ContaminationFraction,KernelScale,Lambda,NumExpansionDimensions,StandardizeData,BetaTolerance,BetaTolerance,GradientTolerance,IterationLimit\n')
                 frr.close()
@@ -252,14 +258,14 @@ class DeAnomalyzer:
             except:
                 print("\nFaild to run Matlab Engine from Python.\n")
                 exit(0)    
-        f1 = []
-        ari = []
+        
         
         labels =  pd.read_csv("Labels/OCSVM_Matlab/Labels_Mat_OCSVM_"+labelFile+".csv", header=None).to_numpy()
         
 
 
-
+        f1 = []
+        ari = []
         if self.withGT:
             for i in range(10):
                 f1.append(metrics.f1_score(self.y, labels[i]))
@@ -273,31 +279,10 @@ class DeAnomalyzer:
         else:
             return -1, np.mean(ari) 
 
-def runOCSVM(filename, X, gt, params, parameter_iteration):
-    labelFile = filename + "_" + str(params[0][1]) + "_" + str(params[1][1]) + "_" + str(params[2][1]) + "_" + str(params[3][1]) + "_" + str(params[4][1]) + "_" + str(params[5][1]) + "_" + str(params[6][1]) + "_" + str(params[7][1])
-
-    if os.path.exists("Labels/OCSVM_Matlab/Labels_Mat_OCSVM_"+labelFile+".csv") == 0:
-        frr=open("GD_ReRun/MatOCSVM.csv", "a")
-        frr.write(filename+","+str(params[0][1])+","+str(params[1][1])+","+str(params[2][1])+","+str(params[3][1])+","+str(params[4][1])+","+str(params[5][1])+","+str(params[6][1])+","+str(params[7][1])+'\n')
-        frr.close()
-        try:
-            eng.MatOCSVM_Rerun(nargout=0)
-            frr=open("GD_ReRun/MatOCSVM.csv", "w")
-            frr.write('Filename,ContaminationFraction,KernelScale,Lambda,NumExpansionDimensions,StandardizeData,BetaTolerance,BetaTolerance,GradientTolerance,IterationLimit\n')
-            frr.close()
-            if os.path.exists("Labels/OCSVM_Matlab/Labels_Mat_OCSVM_"+labelFile+".csv") == 0:      
-                print("\nFaild to run Matlab Engine from Python.\n")
-                exit(0)
-        except:
-            print("\nFaild to run Matlab Engine from Python.\n")
-            exit(0)    
-    f1 = []
-    ari = []
-    
-    labels =  pd.read_csv("Labels/OCSVM_Matlab/Labels_Mat_OCSVM_"+labelFile+".csv", header=None).to_numpy()
-    
         
 if __name__ == '__main__':
+    print("DeAnomalyzer\n\n")
+    
     da = DeAnomalyzer("IF", "Sklearn", "ar1")
     
     blind_route = da.get_blind_route()
@@ -334,7 +319,10 @@ if __name__ == '__main__':
         for i in range(len(guided_route)):
             print(guided_route[i][0],":", guided_route[i][3][guided_route[i][1]][0], end=', ')
         print("\n")
-    # print("DeAnomalyzer\n\n")
+    
+    da.destroy()
+    
+    
     # print("Select one of the following action by entering the serial number")
     # print("\t1. Reduce Non-determinism in Isolation Forest: Scikit-Learn")
     # print("\t2. Reduce Non-determinism in Isolation Forest: Matlab")
