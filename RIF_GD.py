@@ -19,7 +19,6 @@ datasetFolderDir = 'Dataset/'
 withGT = True
 
 fname = str(sys.argv[1])
-# fname='ar1'
 
 
 def isolationforest(filename, parameters, parameter_iteration):

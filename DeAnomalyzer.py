@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jan  2 15:08:33 2023
-
-@author: muyeedahmed
-"""
 import sys
 import subprocess
 
