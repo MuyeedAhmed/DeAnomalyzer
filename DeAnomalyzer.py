@@ -21,21 +21,16 @@ import bisect
 from Paramaters import getParameter
 import matlab.engine
             
-datasetFolderDir = 'Dataset/'
-fname = str(sys.argv[1])
 
 class DeAnomalyzer:
-    def __init__(self, algoName, tool, fileName):
+    def __init__(self, algoName, tool):
         self.algoName = algoName
         self.tool = tool
-        self.fileName = fileName
         self.parameters = getParameter(algoName, tool)
         self.withGT = False
         self.X = []
         self.y = []
         
-        self.readData()
-        self.injectParameter()
         
         if self.tool == "Matlab":
             self.eng = matlab.engine.start_matlab()
@@ -72,34 +67,36 @@ class DeAnomalyzer:
             if if_cont != 0:
                 bisect.insort(self.parameters[0][2], if_cont)
       
-    def readData(self):
-        folderpath = datasetFolderDir
-        if os.path.exists(folderpath+self.fileName+".mat") == 1:
-            try:
-                df = loadmat(folderpath+self.fileName+".mat")
-            except NotImplementedError:
-                df = mat73.loadmat(folderpath+self.fileName+".mat")
+    def readData(self, datapath):
+        if os.path.exists(datapath):
+            if datapath[-3:] == "mat":
+                try:
+                    df = loadmat(datapath)
+                except NotImplementedError:
+                    df = mat73.loadmat(datapath)
         
-            gt=df["y"]
-            self.y = gt.reshape((len(gt)))
-            self.X=df['X']
-            
-            if np.isnan(self.X).any():
-                print("Error: File contains NaN")
-                return
-        elif os.path.exists(folderpath+self.fileName+".csv") == 1:
-            df = pd.read_csv(folderpath+self.fileName+".csv")
-            self.X = df.drop("target", axis=1)
-            if 'target' in df.columns:
-                target = df["target"].to_numpy()
-                self.y = target
-                self.withGT = True
+                gt=df["y"]
+                self.y = gt.reshape((len(gt)))
+                self.X=df['X']
+                
+                if np.isnan(self.X).any():
+                    print("Error: File contains NaN")
+                    return
+            elif datapath[-3:] == "csv":
+                df = pd.read_csv(datapath)
+                self.X = df.drop("target", axis=1)
+                if 'target' in df.columns:
+                    target = df["target"].to_numpy()
+                    self.y = target
+                    self.withGT = True
+                else:
+                    gt = []
+                    self.withGT = False
+                if self.X.isna().any().any() == 1:
+                    print("Error: File contains NaN")
+                    return
             else:
-                gt = []
-                self.withGT = False
-            if self.X.isna().any().any() == 1:
-                print("Error: File contains NaN")
-                return
+                print("Error: File needs to be either .mat or .csv")
         else:
             print("Error: File doesn't exist")
             return
@@ -279,87 +276,38 @@ class DeAnomalyzer:
         else:
             return -1, np.mean(ari) 
 
-        
-if __name__ == '__main__':
-    print("DeAnomalyzer\n\n")
-    
-    da = DeAnomalyzer("IF", "Sklearn", "ar1")
-    
-    blind_route = da.get_blind_route()
-    
-    DefaultARI = str(blind_route[0][3][0][1])
-    DefaultF1 = str(blind_route[0][3][0][2])
-    print("Default settings: ")
-    print("\tCross-run ARI: ", DefaultARI)
-    if da.withGT:
-        print("\tF1 Score: ", DefaultF1)
-    
-    UninformedARI = str(blind_route[-1][3][-1][1])
-    UninformedF1 = str(blind_route[-1][3][-1][2])
-    print("Univariate Search: ")
-    print("\tCross-run ARI: ", UninformedARI)
-    if da.withGT:
-        print("\tF1 Score: ", UninformedF1)
-    print("\tOutput Parameters:")
-    print("\n\t", end='')
-    for i in range(len(blind_route)):
-        print(blind_route[i][0],":", blind_route[i][3][blind_route[i][1]][0], end=', ')
-    print("\n")
-    
-    if da.withGT:
-        guided_route = da.get_guided_route()
-    
-        InformedARI = str(guided_route[-1][3][-1][1])
-        InformedF1 = str(guided_route[-1][3][-1][2])
-        print("Bivariate Search: ")
-        print("\tCross-run ARI: ", InformedARI)
-        print("\tF1 Score: ", InformedF1)
-        print("\tOutput Parameters:")
-        print("\n\t", end='')
-        for i in range(len(guided_route)):
-            print(guided_route[i][0],":", guided_route[i][3][guided_route[i][1]][0], end=', ')
-        print("\n")
-    
-    da.destroy()
-    
-    
-    # print("Select one of the following action by entering the serial number")
-    # print("\t1. Reduce Non-determinism in Isolation Forest: Scikit-Learn")
-    # print("\t2. Reduce Non-determinism in Isolation Forest: Matlab")
-    # print("\t3. Reduce Non-determinism in Isolation Forest: R")
-    # print("\t4. Reduce Non-determinism in Robust Covariance: Scikit-Learn")
-    # print("\t5. Reduce Non-determinism in Robust Covariance: Matlab")
-    # print("\t6. Reduce Non-determinism in One Class SVM: Matlab")
-    # print()
-    # print("\t7. Reduce Inconsistency in Isolation Forest")
-    # print("\t8. Reduce Inconsistency in Robust Covariance")
-    # print("\t9. Reduce Inconsistency in Local Outlier Factor")
-    # print("\t10. Reduce Inconsistency in One Class SVM")
-    # print("Press Enter after completion")
-    
-    # n = int(input("Choice: "))
-    # if n==1:
-    #     subprocess.Popen(["python", "SkIF_GD.py", fname])
-    # elif n ==2:
-    #     subprocess.Popen(["python", "MatIF_GD.py", fname])
-    # elif n ==3:
-    #     subprocess.Popen(["python", "RIF_GD.py", fname])
-    # elif n ==4:
-    #     subprocess.Popen(["python", "SkEE_GD.py", fname])
-    # elif n ==5:
-    #     subprocess.Popen(["python", "MatEE_GD.py", fname])
-    # elif n ==6:
-    #     subprocess.Popen(["python", "MatOCSVM_GD.py", fname])
-        
-    # elif n ==7:
-    #     subprocess.Popen(["python", "Inconsistency_IF.py", fname])
-    # elif n ==8:
-    #     subprocess.Popen(["python", "Inconsistency_EE.py", fname])
-    # elif n ==9:
-    #     subprocess.Popen(["python", "Inconsistency_LOF.py", fname])
-    # elif n ==10:
-    #     subprocess.Popen(["python", "Inconsistency_OCSVM.py", fname])
-    # else:
-    #     print("Try Again")
-        
-    
+    def fit(self, datapath, mode="all"):
+        self.fileName = datapath.split("/")[-1][:-4]
+        self.readData(datapath)
+        self.injectParameter()
+
+        if mode == "all":
+            blind_route = self.get_blind_route()
+            
+            self.default_ari = str(blind_route[0][3][0][1])
+            self.univariate_ari = str(blind_route[-1][3][-1][1])
+            
+            print("\tOutput Parameters:")
+            print("\n\t", end='')
+            for i in range(len(blind_route)):
+                print(blind_route[i][0],":", blind_route[i][3][blind_route[i][1]][0], end=', ')
+            print("\n")
+            
+            if self.withGT:
+                self.default_f1 = str(blind_route[0][3][0][2])
+                self.univariate_f1 = str(blind_route[-1][3][-1][2])
+                
+                guided_route = self.get_guided_route()
+            
+                self.bivariate_ari = str(guided_route[-1][3][-1][1])
+                self.bivariate_f1 = str(guided_route[-1][3][-1][2])
+                
+                print("\tOutput Parameters:")
+                print("\n\t", end='')
+                for i in range(len(guided_route)):
+                    print(guided_route[i][0],":", guided_route[i][3][guided_route[i][1]][0], end=', ')
+                print("\n")
+            
+            self.destroy()
+            return self
+            
